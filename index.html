@@ -267,18 +267,7 @@
     }
   }
 
-  .badge-dot {
-    width: 8px;
-    height: 8px;
-    background: #22C55E;
-    border-radius: 50%;
-    animation: blink 1.5s ease-in-out infinite;
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(0.85); }
-  }
+  /* Duplicate .badge-dot removed — using badgeDotPulse above */
 
   h1 {
     font-weight: 800;
@@ -338,6 +327,9 @@
     color: var(--primary);
     font-weight: 700;
   }
+
+  /* Mobile-only clarity line — hidden on desktop by default */
+  .hero-desc.hero-desc-mobile { display: none; }
 
   .hero-support {
     display: none;
@@ -2669,72 +2661,163 @@
     line-height: 1.6;
   }
 
-  /* Mobile stacked compare */
+  /* ============================================================ */
+  /* MOBILE COMPARE — card-based "Free vs Pack" side-by-side        */
+  /* NN/g: grouped visual comparison reduces cognitive load         */
+  /* ============================================================ */
   @media (max-width: 860px) {
-    .compare-section { padding: 70px 5% 60px; }
-    .compare-table { border-radius: 18px; }
-    .compare-row {
-      grid-template-columns: 1fr;
-      border-bottom: 2px solid rgba(43, 54, 115, 0.08);
+    .compare-section { padding: 60px 5% 50px; }
+
+    /* Disable outer container card — each row becomes its own card */
+    .compare-table {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      border-radius: 0;
+      overflow: visible;
+      margin: 20px auto 28px;
     }
-    .compare-row:last-child { border-bottom: none; }
+
+    /* Hide desktop header row entirely on mobile */
     .compare-header-row { display: none; }
+
+    /* Each row = standalone card with 2-col body (Free | Pack) */
+    .compare-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "feature feature"
+        "free    pack";
+      background: white;
+      border: 1px solid rgba(43, 54, 115, 0.1);
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(43, 54, 115, 0.05);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .compare-row:last-child { margin-bottom: 0; border-bottom: 1px solid rgba(43, 54, 115, 0.1); }
+    .compare-row:hover { background: white; }
+
+    /* Feature title — full-width card header */
     .compare-feature-cell {
-      background: rgba(43, 54, 115, 0.05);
+      grid-area: feature;
+      padding: 14px 16px 10px !important;
+      background: linear-gradient(180deg, rgba(148, 137, 219, 0.06) 0%, transparent 100%);
       border-right: none;
       border-bottom: 1px solid rgba(43, 54, 115, 0.08);
       font-size: 13.5px;
-      font-weight: 700;
-      padding: 13px 18px !important;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.45;
+      display: block;
     }
-    .compare-row:not(.compare-header-row) .compare-free-cell,
-    .compare-row:not(.compare-header-row) .compare-pack-cell {
-      border-right: none;
+
+    /* Free column — centered pill label above, icon below */
+    .compare-row:not(.compare-header-row) .compare-free-cell {
+      grid-area: free;
+      padding: 14px 12px 16px !important;
+      border-right: 1px solid rgba(43, 54, 115, 0.08);
       border-left: none;
-      padding: 13px 18px !important;
-      flex-direction: row;
-      flex-wrap: wrap;
+      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      text-align: left;
-      gap: 10px;
+      text-align: center;
+      gap: 8px;
+      background: rgba(248, 247, 252, 0.4);
     }
+
+    /* Pack column — centered pill label above, icon below, gold highlight */
     .compare-row:not(.compare-header-row) .compare-pack-cell {
-      padding-left: 18px !important;
+      grid-area: pack;
+      padding: 14px 12px 16px !important;
+      border-left: none;
+      display: flex;
+      flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      gap: 8px;
+      background: linear-gradient(180deg, rgba(245, 197, 66, 0.12) 0%, rgba(245, 197, 66, 0.20) 100%);
+      box-shadow: inset 0 0 0 1px rgba(245, 197, 66, 0.14);
     }
-    .compare-row:not(.compare-header-row) .compare-free-cell .cell-note,
-    .compare-row:not(.compare-header-row) .compare-pack-cell .cell-note {
-      flex-basis: 100%;
-      padding-left: 52px;
-      margin-top: -2px;
-    }
+
+    /* Pill labels above icon — "ฟรี" and "PACK 490" */
     .compare-free-cell::before {
       content: "ฟรี";
+      display: inline-block;
       font-weight: 800;
       color: var(--text-light);
-      font-size: 10.5px;
+      font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
-      padding: 3px 8px;
+      letter-spacing: 0.8px;
+      padding: 3px 10px;
       background: rgba(43, 54, 115, 0.08);
       border-radius: 50px;
-      flex-shrink: 0;
     }
     .compare-pack-cell::before {
       content: "PACK 490";
-      font-weight: 800;
+      display: inline-block;
+      font-weight: 900;
       color: var(--primary-dark);
-      font-size: 10.5px;
-      letter-spacing: 0.6px;
-      padding: 3px 8px;
+      font-size: 10px;
+      letter-spacing: 0.8px;
+      padding: 3px 10px;
       background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
       border-radius: 50px;
-      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(224, 169, 26, 0.35);
     }
+
+    /* Icons centered, larger for visual weight */
+    .compare-row:not(.compare-header-row) .icon-yes,
+    .compare-row:not(.compare-header-row) .icon-warn,
+    .compare-row:not(.compare-header-row) .icon-lock {
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    /* Cell notes — small caption below the icon */
+    .compare-row:not(.compare-header-row) .compare-free-cell .cell-note,
+    .compare-row:not(.compare-header-row) .compare-pack-cell .cell-note {
+      font-size: 11px;
+      line-height: 1.45;
+      color: var(--text-light);
+      padding: 0;
+      margin: 0;
+      max-width: 100%;
+      word-break: break-word;
+    }
+    .compare-row:not(.compare-header-row) .compare-pack-cell .cell-note {
+      color: var(--text);
+      font-weight: 600;
+    }
+
     .compare-cta-wrap .btn-pack-cta { min-width: 0; width: 100%; max-width: 380px; }
-    .vline-bridge { padding: 24px 22px; border-radius: 20px; margin-bottom: 44px; }
-    .vline-bridge p { font-size: 14.5px; }
+    .vline-bridge { padding: 20px 18px; border-radius: 18px; margin-bottom: 32px; }
+    .vline-bridge p { font-size: 13.5px; line-height: 1.6; }
+
+    /* Compare headline — tighter */
+    .compare-head h2 { font-size: 23px; line-height: 1.38; }
+    .compare-head p { font-size: 13.5px; line-height: 1.6; }
+  }
+
+  /* ============ TABLET (601px – 900px) — ensure cards look balanced on iPad ============ */
+  @media (min-width: 601px) and (max-width: 900px) {
+    .compare-row {
+      max-width: 620px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 14px;
+    }
+    .compare-feature-cell { font-size: 15px; padding: 16px 20px 12px !important; }
+    .compare-row:not(.compare-header-row) .compare-free-cell,
+    .compare-row:not(.compare-header-row) .compare-pack-cell {
+      padding: 16px 16px 18px !important;
+    }
+    .compare-row:not(.compare-header-row) .icon-yes,
+    .compare-row:not(.compare-header-row) .icon-warn,
+    .compare-row:not(.compare-header-row) .icon-lock { font-size: 24px; }
+    .compare-row:not(.compare-header-row) .cell-note { font-size: 12px; }
   }
 
   /* ============ FAQ ACCORDION ============ */
@@ -2992,12 +3075,13 @@
 
   .final-cta-box p.final-sub {
     font-size: 16px;
-    color: rgba(255, 255, 255, 0.88);
+    color: #ffffff;
     max-width: 640px;
     margin: 0 auto 34px;
     line-height: 1.7;
     position: relative;
     z-index: 1;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
   }
 
   .final-cta-box p.final-sub strong {
@@ -3112,13 +3196,16 @@
   }
 
   /* ============ RESPONSIVE ============ */
+  /* Desktop default — hide mobile-only compact chip text */
+  .tc-compact { display: none; }
+
   @media (max-width: 900px) {
     .hero {
       grid-template-columns: 1fr;
       text-align: center;
       min-height: auto;
-      padding: 118px 5% 50px;
-      gap: 30px;
+      padding: 104px 5% 42px;
+      gap: 18px;
     }
     h1 { margin-left: auto; margin-right: auto; align-items: center; }
     h1 .h1-main,
@@ -3129,128 +3216,270 @@
     }
     .hero-buttons { justify-content: center; }
     .trust-bar { margin-left: auto; margin-right: auto; }
-    .mascot-stage { width: 300px; height: 370px; }
-    .mascot-glow { width: 340px; height: 340px; }
+    .mascot-stage { width: 280px; height: 340px; }
+    .mascot-glow { width: 280px; height: 280px; }
     .nav-links { display: none; }
     /* Reduce heavy blur for mobile GPU perf */
-    .blob { filter: blur(60px); opacity: 0.22; }
+    .blob { filter: blur(60px); opacity: 0.20; }
   }
 
   /* ============ MOBILE HERO — optimized for iPhone / Android ============ */
   @media (max-width: 600px) {
     .hero {
-      padding: 96px 5% 36px;
-      gap: 22px;
+      padding: 84px 5% 28px;
+      gap: 14px;
     }
     /* Hide redundant badge on mobile — urgency-pill + target-chips cover it */
     .hero-content > .badge { display: none; }
 
     /* Compact urgency pill */
     .urgency-pill {
-      margin-bottom: 12px;
-      padding: 8px 14px 8px 12px;
-      font-size: 11.5px;
+      margin-bottom: 10px;
+      padding: 7px 13px 7px 11px;
+      font-size: 11px;
     }
+    .urgency-pill .u-dot { width: 7px; height: 7px; }
 
     /* Tighter headline stack */
     h1 {
-      margin-bottom: 14px;
-      gap: 6px;
+      margin-bottom: 8px;
+      gap: 5px;
     }
     h1 .h1-main {
-      font-size: 26px;
-      line-height: 1.3;
+      font-size: 25px;
+      line-height: 1.28;
       letter-spacing: -0.3px;
     }
     h1 .h1-sub {
-      font-size: 15.5px;
-      line-height: 1.45;
+      font-size: 14.5px;
+      line-height: 1.4;
       font-weight: 700;
     }
 
-    /* Hide hero-desc — info already in h1-sub + target-chips */
+    /* Hide long desktop hero-desc — keep short mobile-only clarity line below */
     .hero-desc { display: none; }
+    .hero-desc.hero-desc-mobile {
+      display: block;
+      font-size: 12.5px;
+      line-height: 1.5;
+      margin: 4px auto 0;
+      max-width: 320px;
+      color: var(--text-light);
+      font-weight: 500;
+    }
 
-    /* Compact target chips — centered row */
+    /* Compact target chips — allow wrap on tight screens, short labels */
+    .tc-full { display: none; }
+    .tc-compact { display: inline; }
     .target-chips {
       justify-content: center;
+      flex-wrap: wrap;
       gap: 6px;
-      margin-top: 2px;
-      margin-bottom: 10px;
+      margin-top: 8px;
+      margin-bottom: 4px;
     }
     .target-chip {
-      padding: 6px 11px;
+      padding: 6px 10px;
       font-size: 11px;
+      white-space: nowrap;
     }
+    .target-chip .tc-icon { font-size: 12px; margin-right: 3px; }
 
     /* Primary CTA — full width, thumb-friendly */
     .hero-buttons {
-      margin-top: 14px;
-      margin-bottom: 10px;
+      margin-top: 12px;
+      margin-bottom: 6px;
     }
     .btn-cta {
       width: 100%;
-      padding: 17px 22px;
-      border-radius: 18px;
+      padding: 16px 20px;
+      border-radius: 16px;
     }
-    .btn-cta .btn-main { font-size: 16px; }
-    .btn-cta .btn-sub { font-size: 11.5px; }
+    .btn-cta .btn-main { font-size: 15.5px; }
+    .btn-cta .btn-sub { font-size: 11px; }
 
-    /* Compact trust bar */
+    /* Compact trust bar — single line, essential info only */
     .trust-bar {
-      margin-top: 8px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      align-items: flex-start;
-      gap: 10px;
+      margin-top: 4px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      align-items: center;
+      gap: 9px;
       border-left-width: 3px;
     }
-    .trust-shield { font-size: 18px; margin-top: 1px; }
+    .trust-shield { font-size: 16px; margin-top: 0; }
     .trust-line {
-      font-size: 11.5px;
-      line-height: 1.6;
+      font-size: 11px;
+      line-height: 1.5;
     }
-    .trust-line .sep { margin: 0 5px; }
+    .trust-line .sep { margin: 0 4px; }
+    /* Hide secondary trust-line on mobile — row 1 already covers trust */
+    .trust-line-2 { display: none; }
 
-    /* Smaller mascot for above-the-fold CTA visibility */
+    /* Compact mascot — visually balanced with content */
+    .hero-visual { margin-top: -6px; }
     .mascot-stage {
-      width: 260px;
-      height: 320px;
+      width: 220px;
+      height: 270px;
     }
     .mascot-glow {
-      width: 280px;
-      height: 280px;
+      width: 220px;
+      height: 220px;
+      opacity: 0.75;
     }
-    .mascot-shadow { width: 160px; height: 22px; }
+    .mascot-shadow { width: 140px; height: 18px; }
+    /* Hide orbit icons (credit card / house / car) on mobile —
+       info already covered by target-chips below headline */
+    .orbit-icon { display: none; }
 
-    /* Reduce background clutter */
-    .blob { filter: blur(50px); opacity: 0.18; }
+    /* Reduce background clutter drastically */
+    .blob { filter: blur(45px); opacity: 0.14; }
+    .blob-1 { display: none; }
     .blob-3 { display: none; }
-    .sparkle-2, .sparkle-4, .sparkle-6, .sparkle-7 { display: none; }
+
+    /* Hide ALL sparkles on mobile — reduce motion competition with CTA */
+    .sparkle { display: none; }
+
+    /* Stop mascot motion on mobile — avoid attention-stealing from CTA */
+    .mascot-float,
+    .mascot-sway,
+    .mascot-img { animation: none !important; }
+    .blob { animation: none !important; }
+
+    /* Urgency pill: stop bounce, keep dot pulse subtle */
+    .urgency-pill { animation: none; }
+    .urgency-pill .u-dot { animation-duration: 2.6s; }
+
+    /* Mobile perf: disable backdrop-filter (saves GPU) */
+    nav,
+    .trust-bar,
+    .mobile-sticky-cta {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
   }
 
   /* ============ SMALL PHONES (iPhone SE, small Android) ============ */
   @media (max-width: 400px) {
     .hero {
-      padding: 88px 4% 30px;
-      gap: 18px;
+      padding: 78px 4% 24px;
+      gap: 12px;
     }
     .urgency-pill {
-      font-size: 10.5px;
-      padding: 7px 12px 7px 10px;
-      margin-bottom: 10px;
+      font-size: 10px;
+      padding: 6px 11px 6px 9px;
+      margin-bottom: 8px;
     }
-    h1 { margin-bottom: 12px; gap: 4px; }
-    h1 .h1-main { font-size: 23px; line-height: 1.28; }
-    h1 .h1-sub { font-size: 14px; line-height: 1.4; }
-    .target-chip { padding: 5px 10px; font-size: 10.5px; }
-    .btn-cta { padding: 15px 18px; border-radius: 16px; }
-    .btn-cta .btn-main { font-size: 15px; }
-    .btn-cta .btn-sub { font-size: 11px; }
-    .trust-bar { padding: 11px 13px; }
-    .trust-line { font-size: 11px; }
-    .mascot-stage { width: 220px; height: 275px; }
-    .mascot-glow { width: 240px; height: 240px; }
+    h1 { margin-bottom: 8px; gap: 4px; }
+    h1 .h1-main { font-size: 22px; line-height: 1.26; }
+    h1 .h1-sub { font-size: 13.5px; line-height: 1.38; }
+    .target-chips { gap: 5px; }
+    .target-chip { padding: 5px 9px; font-size: 10.5px; }
+    .target-chip .tc-icon { font-size: 11px; margin-right: 2px; }
+    .btn-cta { padding: 14px 16px; border-radius: 14px; }
+    .btn-cta .btn-main { font-size: 14.5px; }
+    .btn-cta .btn-sub { font-size: 10.5px; }
+    .trust-bar { padding: 9px 11px; gap: 8px; }
+    .trust-shield { font-size: 15px; }
+    .trust-line { font-size: 10.5px; }
+    .mascot-stage { width: 190px; height: 235px; }
+    .mascot-glow { width: 190px; height: 190px; }
+    .mascot-shadow { width: 120px; height: 16px; }
+  }
+
+  /* ============================================================= */
+  /* MOBILE SECTION POLISH (≤ 600px) — nav / FAQ / Final CTA / etc. */
+  /* ============================================================= */
+  @media (max-width: 600px) {
+    /* Compact nav header — smaller logo + CTA */
+    nav { padding: 10px 5%; }
+    .logo { height: 48px; }
+    .btn-nav-cta {
+      padding: 9px 16px;
+      font-size: 12.5px;
+      border-radius: 50px;
+    }
+
+    /* FAQ — tighter cards, headline, spacing */
+    .faq-section { padding: 56px 5% 40px; max-width: 100%; }
+    .faq-head { margin-bottom: 28px; }
+    .faq-head-label { font-size: 11px; padding: 5px 14px; margin-bottom: 12px; }
+    .faq-head h2 { font-size: 24px; line-height: 1.35; }
+    .faq-head p { font-size: 13.5px; line-height: 1.55; }
+    .faq-list { gap: 10px; }
+    .faq-item { border-radius: 14px; }
+    .faq-item summary { padding: 15px 16px; font-size: 14px; gap: 10px; line-height: 1.55; }
+    .faq-item summary::after { width: 24px; height: 24px; font-size: 18px; }
+    .faq-body { padding: 2px 16px 18px 16px; }
+    .faq-body p { font-size: 13px; line-height: 1.85; margin-bottom: 9px; }
+
+    /* FAQ contact box — tighter, single-column stacks */
+    .faq-contact { margin: 26px 0 0; padding: 20px 18px 18px; border-radius: 16px; }
+    .faq-contact p { font-size: 14px; margin-bottom: 4px; }
+    .faq-contact small { font-size: 11.5px; line-height: 1.55; margin-bottom: 12px; }
+    .faq-contact-channels { gap: 9px; flex-direction: column; }
+    .faq-channel { padding: 11px 16px 11px 14px; border-radius: 12px; width: 100%; }
+    .faq-channel .ch-icon { width: 32px; height: 32px; font-size: 15px; }
+    .faq-channel .ch-label { font-size: 10px; }
+    .faq-channel .ch-handle { font-size: 13px; }
+
+    /* Final CTA — navy hero-style box on mobile */
+    .final-cta-section { padding: 48px 5% 36px; }
+    .final-cta-box {
+      padding: 36px 20px 32px;
+      border-radius: 22px;
+      box-shadow: 0 18px 40px rgba(27, 36, 84, 0.3);
+    }
+    .final-cta-box::before { width: 220px; height: 220px; top: -80px; right: -60px; }
+    .final-cta-box::after { width: 180px; height: 180px; bottom: -70px; left: -50px; }
+    .final-cta-box h2 {
+      font-size: 23px;
+      line-height: 1.38;
+      margin-bottom: 12px;
+    }
+    .final-cta-box p.final-sub {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #ffffff;
+      font-weight: 600;
+      margin-bottom: 18px;
+      max-width: 100%;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    }
+    .final-cta-btn {
+      padding: 16px 22px;
+      width: 100%;
+      max-width: 100%;
+      border-radius: 16px;
+      gap: 3px;
+    }
+    .final-cta-btn .btn-main { font-size: 16px; letter-spacing: 0; }
+    .final-cta-btn .btn-sub { font-size: 11.5px; }
+    .final-cta-trust { margin-top: 14px; font-size: 11.5px; gap: 6px; }
+
+    /* Legal disclaimer — compact block */
+    .legal-disclaimer {
+      margin: 28px 0 14px;
+      padding: 14px 16px;
+      font-size: 11px;
+      line-height: 1.65;
+      border-radius: 12px;
+    }
+
+    /* Footer — single-line compact */
+    footer { padding: 20px 5% calc(90px + env(safe-area-inset-bottom)); font-size: 12px; line-height: 1.55; }
+
+    /* Testimonial / social proof card — tighter spacing */
+    .testimonial-card { padding: 22px 20px 20px; border-radius: 18px; }
+    .testimonial-card::before { font-size: 50px; top: 12px; right: 18px; }
+    .testimonial-stars { font-size: 14px; margin-bottom: 10px; }
+    .testimonial-body { font-size: 14px; line-height: 1.75; margin-bottom: 16px; }
+    .testimonial-avatar { width: 40px; height: 40px; font-size: 15px; }
+    .testimonial-name { font-size: 14px; }
+    .testimonial-case { font-size: 11.5px; }
+
+    /* Give final content breathing room above the fixed sticky CTA bar */
+    footer { margin-bottom: 0; }
   }
 
   /* ============================================= */
@@ -3593,49 +3822,41 @@
     border-top: 1px solid rgba(43, 54, 115, 0.1);
     box-shadow: 0 -8px 28px rgba(27, 36, 84, 0.12);
     padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
-  }
-  .mobile-sticky-cta .msc-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .mobile-sticky-cta .msc-free {
-    flex-shrink: 0;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--primary);
-    text-decoration: none;
-    padding: 12px 12px;
-    border: 1px solid rgba(43, 54, 115, 0.2);
-    border-radius: 12px;
-    line-height: 1.2;
     text-align: center;
   }
-  .mobile-sticky-cta .msc-pack {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1px;
-    padding: 12px 14px;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-    color: var(--primary-dark);
+  /* Single primary button — full-width, thumb-friendly */
+  .mobile-sticky-cta .msc-start {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 15.5px;
+    letter-spacing: 0.1px;
     border-radius: 14px;
     text-decoration: none;
-    font-weight: 900;
-    font-size: 14px;
-    box-shadow: 0 8px 20px rgba(224, 169, 26, 0.35);
+    text-align: center;
+    line-height: 1.2;
+    box-shadow: 0 10px 24px rgba(27, 36, 84, 0.32), 0 2px 6px rgba(27, 36, 84, 0.18);
   }
-  .mobile-sticky-cta .msc-pack .msc-sub {
-    font-size: 10.5px;
-    font-weight: 600;
-    opacity: 0.88;
+  .mobile-sticky-cta .msc-caption {
+    margin: 6px 0 0;
+    font-size: 11px;
+    color: var(--text-light);
+    font-weight: 500;
+    line-height: 1.35;
   }
 
-  /* Show sticky CTA only on mobile & only after scrolling past hero */
-  @media (max-width: 860px) {
+  /* Show sticky CTA only on real mobile (≤600px) */
+  @media (max-width: 600px) {
     .mobile-sticky-cta { display: block; }
-    body { padding-bottom: 80px; }
+    body { padding-bottom: 96px; }
+  }
+  /* Do NOT show sticky CTA on tablets/iPad */
+  @media (min-width: 601px) {
+    .mobile-sticky-cta { display: none; }
   }
 
   /* Testimonial grid mobile */
@@ -3652,6 +3873,37 @@
     .target-chip { font-size: 11.5px; padding: 6px 12px; }
     .risk-reversal { gap: 12px 18px; margin-top: 14px; }
     .risk-reversal .rr-item { font-size: 11.5px; }
+  }
+
+  /* ============================================================ */
+  /* iPAD LANDSCAPE (901–1100px) — 2-column hero "desktop-lite"     */
+  /* Ensures CTA + visual both above fold on iPad landscape        */
+  /* ============================================================ */
+  @media (min-width: 901px) and (max-width: 1100px) {
+    .hero {
+      grid-template-columns: 1.1fr 0.9fr;
+      text-align: left;
+      padding: 160px 6% 70px;
+      gap: 44px;
+    }
+    h1 { margin-left: 0; margin-right: 0; align-items: flex-start; }
+    .hero-desc { margin-left: 0; margin-right: 0; }
+    .hero-buttons { justify-content: flex-start; }
+    .trust-bar { margin-left: 0; margin-right: 0; }
+    .mascot-stage { width: 420px; height: 520px; }
+    .mascot-glow { width: 420px; height: 420px; }
+    .orbit-icon { display: flex; animation: none; } /* show orbit icons on iPad landscape — static, no float */
+  }
+
+  /* ============================================================ */
+  /* GLOBAL: prefers-reduced-motion — accessibility (WCAG 2.3.3)    */
+  /* ============================================================ */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
   }
 </style>
 </head>
@@ -3699,22 +3951,23 @@
     <p class="hero-desc">
       ให้คุณรู้ว่าคดีอยู่ขั้นไหน เร่งด่วนแค่ไหน และควรเริ่มจากจุดไหนก่อน
     </p>
+    <p class="hero-desc hero-desc-mobile">รู้ว่าคดีอยู่ขั้นไหน • เร่งด่วนแค่ไหน • ควรเริ่มจากตรงไหน (เบื้องต้น)</p>
     <div class="target-chips" aria-label="ประเภทคดีที่รองรับ">
-      <span class="target-chip"><span class="tc-icon">💳</span>บัตรเครดิต / สินเชื่อส่วนบุคคล</span>
-      <span class="target-chip"><span class="tc-icon">🚗</span>สินเชื่อรถ / เช่าซื้อ</span>
-      <span class="target-chip"><span class="tc-icon">🏠</span>สินเชื่อบ้าน / จำนอง</span>
+      <span class="target-chip"><span class="tc-icon">💳</span><span class="tc-full">บัตรเครดิต / สินเชื่อส่วนบุคคล</span><span class="tc-compact">บัตรเครดิต</span></span>
+      <span class="target-chip"><span class="tc-icon">🚗</span><span class="tc-full">สินเชื่อรถ / เช่าซื้อ</span><span class="tc-compact">รถ / เช่าซื้อ</span></span>
+      <span class="target-chip"><span class="tc-icon">🏠</span><span class="tc-full">สินเชื่อบ้าน / จำนอง</span><span class="tc-compact">บ้าน / จำนอง</span></span>
     </div>
     <div class="hero-buttons">
       <a href="https://line.me/R/ti/p/@thundebt" target="_blank" rel="noopener" class="btn btn-primary btn-cta">
         <span class="btn-main">เริ่มประเมินสถานการณ์ — ฟรี →</span>
-        <span class="btn-sub">ใช้เวลา ~2 นาที · ไม่ต้องสมัคร</span>
+        <span class="btn-sub">ไม่ต้องสมัคร • ใช้เวลา ~2 นาที • จำคำตอบในเครื่อง</span>
       </a>
     </div>
     <div class="trust-bar">
       <span class="trust-shield">🛡️</span>
       <div class="trust-text">
-        <span class="trust-line">พัฒนาจาก<strong>ประสบการณ์คดีหนี้จริง 17 ปี</strong><span class="sep">•</span>เข้าใจทั้งฝั่งเจ้าหนี้และลูกหนี้</span>
-        <span class="trust-line">ครอบคลุมคดีบัตรเครดิต รถ และบ้าน<span class="sep">•</span>เพื่อช่วยให้คุณเริ่มตั้งหลักได้ง่ายขึ้น</span>
+        <span class="trust-line trust-line-1">พัฒนาจาก<strong>ประสบการณ์คดีหนี้จริง 17 ปี</strong><span class="sep">•</span>เข้าใจทั้งฝั่งเจ้าหนี้และลูกหนี้</span>
+        <span class="trust-line trust-line-2">ครอบคลุมคดีบัตรเครดิต รถ และบ้าน<span class="sep">•</span>เพื่อช่วยให้คุณเริ่มตั้งหลักได้ง่ายขึ้น</span>
       </div>
     </div>
   </div>
@@ -4420,7 +4673,7 @@
       อย่าปล่อยให้ <strong>ความไม่รู้</strong><br>
       ทำให้คุณพลาดขั้นตอนสำคัญในศาล
     </h2>
-    <p class="final-cta-lede">
+    <p class="final-sub">
       เริ่มจากประเมินฟรี — ถ้าพร้อม ค่อยปลดล็อกแผนเต็มใน 490 บาท
     </p>
     <a href="#checkout" class="final-cta-btn">
@@ -4458,13 +4711,8 @@
 <!-- Sticky bottom CTA bar (mobile only)            -->
 <!-- ============================================= -->
 <div class="mobile-sticky-cta" role="complementary" aria-label="ทางลัดเริ่มใช้งาน">
-  <div class="msc-row">
-    <a href="https://line.me/R/ti/p/@thundebt" target="_blank" rel="noopener" class="msc-free">ประเมินฟรี<br>2 นาที</a>
-    <a href="#checkout" class="msc-pack">
-      ปลดล็อกแพ็ก 490฿
-      <span class="msc-sub">ใช้ได้ทันทีหลังชำระ</span>
-    </a>
-  </div>
+  <a href="https://line.me/R/ti/p/@thundebt" target="_blank" rel="noopener" class="msc-start">เริ่มประเมินฟรี</a>
+  <p class="msc-caption">ดูผลฟรีก่อน แล้วค่อยตัดสินใจปลดล็อก 490</p>
 </div>
 
 <script>
